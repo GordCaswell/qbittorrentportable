@@ -1,6 +1,13 @@
 ${SegmentFile}
 
 ${SegmentPre}
+	;Get the system's main TEMP and use that to ensure a second instance of qBittorrent doesn't occur
+	ExpandEnvStrings $0 "%PortableApps.comTEMP%"
+	${If} $0 != ""
+		System::Call 'Kernel32::SetEnvironmentVariable(t, t) i("TEMP", "$0").r0'
+		System::Call 'Kernel32::SetEnvironmentVariable(t, t) i("TMP", "$0").r0'
+	${EndIf}
+
 	${Registry::StrToHex} ":" $9 ;$9 now contains the ASCII code for :
 	ExpandEnvStrings $0 "%PAL:Drive%"
 	${Registry::StrToHex} $0 $1 ;$1 now contains the ASCII code for current drive
